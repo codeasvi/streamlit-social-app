@@ -5,20 +5,22 @@ import pandas as pd
 # -----------------------------
 # PAGE SETUP
 # -----------------------------
-st.set_page_config(page_title="Social Media Analyzer", layout="wide")
-st.title("🌐 Social Media Topic Analyzer")
+st.set_page_config(page_title="Social Media Trends", layout="wide")
+st.title("📊 Social Media Trending Topics Analyzer")
+
+st.caption("Click a trending topic to see instant analysis")
 
 # -----------------------------
-# USER INPUT
+# TRENDING TOPICS (SIMULATED)
 # -----------------------------
-topic = st.text_input("Enter a topic", value="finance")
-
-if not topic.strip():
-    st.warning("Please enter a topic to see results.")
-    st.stop()
+TRENDING_TOPICS = {
+    "Facebook": ["Finance", "Crypto", "AI", "Stock Market", "Startups"],
+    "Twitter": ["Breaking News", "Elections", "Tech Updates", "Crypto", "Sports"],
+    "Reddit": ["Investing", "WallStreetBets", "AI Tools", "Career Advice", "Gaming"]
+}
 
 # -----------------------------
-# DATA GENERATION
+# WORD GENERATOR
 # -----------------------------
 def generate_words(topic, platform):
     base = [topic, "market", "growth", "trend", "analysis", "economy"]
@@ -30,28 +32,50 @@ def generate_words(topic, platform):
     return random.choices(base + bias[platform], k=500)
 
 # -----------------------------
-# VISUALIZATION
+# SHOW RESULT
 # -----------------------------
-def show_chart(words, platform):
+def show_result(topic, platform):
+    words = generate_words(topic, platform)
     freq = pd.Series(words).value_counts().head(15)
-    st.subheader(f"{platform} Keyword Frequency")
+
+    st.subheader(f"{platform} Topic Analysis: **{topic}**")
     st.bar_chart(freq)
-    st.success("✅ Results updated")
+    st.success("✅ Trending topic analyzed")
 
 # -----------------------------
 # TABS
 # -----------------------------
-tab1, tab2, tab3 = st.tabs(["Facebook", "Twitter", "Reddit"])
+tab1, tab2, tab3 = st.tabs(["📘 Facebook", "🐦 Twitter", "👽 Reddit"])
 
+# -----------------------------
+# FACEBOOK TAB
+# -----------------------------
 with tab1:
-    fb_words = generate_words(topic, "Facebook")
-    show_chart(fb_words, "Facebook")
+    st.subheader("🔥 Facebook Trending Topics")
 
+    for topic in TRENDING_TOPICS["Facebook"]:
+        if st.button(topic, key=f"fb_{topic}"):
+            show_result(topic, "Facebook")
+
+# -----------------------------
+# TWITTER TAB
+# -----------------------------
 with tab2:
-    tw_words = generate_words(topic, "Twitter")
-    show_chart(tw_words, "Twitter")
+    st.subheader("🔥 Twitter Trending Topics")
 
+    for topic in TRENDING_TOPICS["Twitter"]:
+        if st.button(topic, key=f"tw_{topic}"):
+            show_result(topic, "Twitter")
+
+# -----------------------------
+# REDDIT TAB
+# -----------------------------
 with tab3:
-    rd_words = generate_words(topic, "Reddit")
-    show_chart(rd_words, "Reddit")
+    st.subheader("🔥 Reddit Trending Topics")
+
+    for topic in TRENDING_TOPICS["Reddit"]:
+        if st.button(topic, key=f"rd_{topic}"):
+            show_result(topic, "Reddit")
+
+
 
